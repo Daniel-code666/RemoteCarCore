@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "../Test"
+		},
+		{
+			"name": "Test ESP32 Mini",
+			"path": "../Test/Test ESP32 Mini"
+		},
+		{
+			"name": "RemoteCarProject",
+			"path": "."
+		}
+	],
+	"settings": {}
+}
