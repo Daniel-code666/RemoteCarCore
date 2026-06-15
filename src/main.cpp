@@ -18,6 +18,12 @@ bool deviceConnected = false;
 // bandera para mostrar mensaje de conexión
 bool showConnMsg = true;
 
+std::string lastPayload = "";
+bool hasNewPayload = false;
+
+unsigned long lastPrintTime = 0;
+const unsigned long PRINT_INTERVAL_MS = 100;
+
 // clase para indicarle al servidor BLE que hacer cuando un cliente se conecta o desconecta. Esta clase hereda de BLEServerCallbacks, lo que significa 
 // que puede manejar eventos relacionados con el servidor BLE, como conexiones y desconexiones de clientes. En este caso, se implementan los métodos onConnect 
 // y onDisconnect para actualizar la bandera deviceConnected cuando un cliente se conecta o desconecta del servidor BLE.
@@ -44,8 +50,8 @@ class RemoteControlCallback: public BLECharacteristicCallbacks {
         if (payload.length() == 0)
             return;
         
-        Serial.print("Payload recibido: ");
-        Serial.println(payload.c_str());
+        lastPayload = payload;
+        hasNewPayload = true;
     }
 };
 
@@ -80,20 +86,12 @@ void setup() {
 }
 
 void loop() {
-    if (deviceConnected) 
-    {
-        // aquí se pueden enviar datos al cliente BLE o realizar otras acciones
-        if (showConnMsg) {
-            Serial.println("Cliente conectado al servidor BLE");
-            showConnMsg = false;
-        }
+    if (hasNewPayload && millis() - lastPrintTime >= PRINT_INTERVAL_MS) {
+        Serial.print("último payload recibido: ");
+        Serial.println(lastPayload.c_str());
+        hasNewPayload = false;
+        lastPrintTime = millis();
     }
-    else 
-    {
-        // aquí se pueden realizar acciones cuando no hay ningún cliente conectado al servidor BLE
-        if (!showConnMsg) {
-            Serial.println("Cliente desconectado del servidor BLE");
-            showConnMsg = true;
-        }
-    }
+
+    delay(5);
 }
