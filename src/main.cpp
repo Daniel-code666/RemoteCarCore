@@ -10,12 +10,13 @@
 #define SERVICE_UUID "65215951-565f-4530-ae33-166245c668cf"
 
 // Características BLE
-BLECharacteristic remoteControlCharacteristic("3986086c-190f-4de8-8164-24abdf042717", BLECharacteristic::PROPERTY_WRITE_NR);
-
-Servo steering_servo;
+BLECharacteristic remoteControlCharacteristic("3986086c-190f-4de8-8164-24abdf042717", BLECharacteristic::PROPERTY_WRITE_NR | BLECharacteristic::PROPERTY_WRITE);
 
 // bandera para saber si el dispositivo BLE está conectado o no
 bool deviceConnected = false;
+
+// bandera para mostrar mensaje de conexión
+bool showConnMsg = true;
 
 // clase para indicarle al servidor BLE que hacer cuando un cliente se conecta o desconecta. Esta clase hereda de BLEServerCallbacks, lo que significa 
 // que puede manejar eventos relacionados con el servidor BLE, como conexiones y desconexiones de clientes. En este caso, se implementan los métodos onConnect 
@@ -33,6 +34,18 @@ class MyServerCallbacks: public BLEServerCallbacks {
         Serial.println("Cliente desconectado del servidor BLE");
         pServer->getAdvertising()->start();
         Serial.println("Reiniciando el advertising");
+    }
+};
+
+class RemoteControlCallback: public BLECharacteristicCallbacks {
+    void onWrite(BLECharacteristic* pCharacteristic) {
+        std::string payload = pCharacteristic->getValue();
+        
+        if (payload.length() == 0)
+            return;
+        
+        Serial.print("Payload recibido: ");
+        Serial.println(payload.c_str());
     }
 };
 
@@ -54,6 +67,7 @@ void setup() {
 
     // Creación del descriptor y caracaterística para el control remoto
     bleService->addCharacteristic(&remoteControlCharacteristic);
+    remoteControlCharacteristic.setCallbacks(new RemoteControlCallback());
 
     // inicia el servicio BLE
     bleService->start();
@@ -66,15 +80,20 @@ void setup() {
 }
 
 void loop() {
-    if (deviceConnected) {
+    if (deviceConnected) 
+    {
         // aquí se pueden enviar datos al cliente BLE o realizar otras acciones
-        Serial.println("Esperando comando");
-        delay(1000);
+        if (showConnMsg) {
+            Serial.println("Cliente conectado al servidor BLE");
+            showConnMsg = false;
+        }
     }
     else 
     {
         // aquí se pueden realizar acciones cuando no hay ningún cliente conectado al servidor BLE
-        Serial.println("No hay ningún cliente conectado al servidor BLE");
-        delay(1000);
+        if (!showConnMsg) {
+            Serial.println("Cliente desconectado del servidor BLE");
+            showConnMsg = true;
+        }
     }
 }
