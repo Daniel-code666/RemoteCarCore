@@ -7,7 +7,9 @@
 
 class SGCarDirection {
     public:
-        void SetDirection(RemoteControlPayload currentPayload);
+        void SetDirection(int steering);
+    private:
+        int lastServoAngle = -1;
 };
 
 #endif

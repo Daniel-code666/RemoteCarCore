@@ -1,17 +1,16 @@
 #include "SGDirection.h"
+#include "SGGlobals.h"
+#include "Servo/SGConstants.h"
 
-void SGCarDirection::SetDirection(RemoteControlPayload currentPayload)
+
+void SGCarDirection::SetDirection(int steering)
 {
-    Serial.print("último payload recibido desde SGDirection: ");
-    Serial.print("Modo: ");
-    Serial.println(currentPayload.mode);
+    int steeringConstraint = constrain(steering, -100, 100);
 
-    Serial.print("Throttle: ");
-    Serial.println(currentPayload.throttle);
+    int servoAngle = SERVO_CENTER + ((steeringConstraint * SERVO_MAX_OFFSET) / 100);
 
-    Serial.print("Steering: ");
-    Serial.println(currentPayload.steering);
+    if (servoAngle == lastServoAngle) return;
 
-    Serial.print("Brake: ");
-    Serial.println(currentPayload.brake ? "Activo" : "Inactivo");
+    steeringServo.write(servoAngle);
+    lastServoAngle = servoAngle;
 }

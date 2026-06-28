@@ -1,5 +1,6 @@
 #include "SGGlobals.h"
 #include "SGConstants.h"
+#include "SGDirection.h"
 
 Servo steeringServo;
 int currentSteering = 0;

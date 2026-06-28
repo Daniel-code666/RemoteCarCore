@@ -2,7 +2,8 @@
 #define SG_GLOBALS_H
 
 #include <ESP32Servo.h>
-#include "SGDirection.h"
+
+class SGCarDirection;
 
 extern Servo steeringServo;
 extern int currentSteering;

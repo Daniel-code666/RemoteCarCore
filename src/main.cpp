@@ -9,12 +9,14 @@
 #include "Callbacks/BleServerCallbacksHandler.h"
 #include "Callbacks/RemoteControlCallbacksHandler.h"
 #include "Servo/SGConstants.h"
-#include "Servo/SGDirection.h"
 #include "Servo/SGGlobals.h"
+#include "CarMovement/CarMotionController.h"
+#include "CarMovement/CarMovementGlobals.h"
 
 void setup() {
     Serial.begin(115200);
 
+    // se configura el servo
     steeringServo.setPeriodHertz(PERIOD_HERTZ);
     steeringServo.attach(SERVO_PIN, DEFAULT_uS_LOW_CONST, DEFAULT_uS_HIGH_CONST);
 
@@ -46,11 +48,13 @@ void setup() {
 }
 
 void loop() {
-    if (hasNewPayload && millis() - lastPrintTime >= PRINT_INTERVAL_MS) {
-        sgCarDirection.SetDirection(currentPayload);
+    if (hasNewPayload) {
+        carMotion.Apply(currentPayload);
         hasNewPayload = false;
-        lastPrintTime = millis();
+        lastControlUpdateTime = millis();
     }
+
+    carMotion.CheckSafety();
 
     delay(5);
 }

@@ -15,8 +15,6 @@ constexpr int DEFAULT_uS_HIGH_CONST = 2400;
 
 constexpr int SERVO_CENTER = 90;
 
-constexpr int SERVO_LEFT = 60;
-
-constexpr int SERVO_RIGHT = 120;
+constexpr int SERVO_MAX_OFFSET = 30;
 
 #endif

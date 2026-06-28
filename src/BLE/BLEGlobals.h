@@ -16,10 +16,10 @@ extern bool showConnMsg;
 // variable para almacenar el último payload recibido
 extern std::string lastPayload;
 // bandera que indica si hay un nuevo payload diferente al anterior
-extern bool hasNewPayload;
+extern volatile bool hasNewPayload;
 
-// variable que almacena último tiempo del impresión en la consola
-extern unsigned long lastPrintTime;
+// variable que almacena la frecuencia de aplicación del comando
+extern unsigned long lastControlUpdateTime;
 // característica BLE global
 extern BLECharacteristic remoteControlCharacteristic;
 

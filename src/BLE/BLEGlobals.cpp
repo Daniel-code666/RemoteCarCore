@@ -5,9 +5,9 @@ bool deviceConnected = false;
 bool showConnMsg = true;
 
 std::string lastPayload = "";
-bool hasNewPayload = false;
+volatile bool hasNewPayload = false;
 
-unsigned long lastPrintTime = 0;
+unsigned long lastControlUpdateTime = 0;
 
 BLECharacteristic remoteControlCharacteristic(REMOTE_CONTROL_CHARACTERISTIC_UUID, BLECharacteristic::PROPERTY_WRITE_NR | BLECharacteristic::PROPERTY_WRITE);
 
