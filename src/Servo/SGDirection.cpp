@@ -7,6 +7,10 @@ void SGCarDirection::SetDirection(int steering)
 {
     int steeringConstraint = constrain(steering, -100, 100);
 
+    if (abs(steeringConstraint) <= 3) {
+        steeringConstraint = 0;
+    }
+
     int servoAngle = SERVO_CENTER;
 
     if (steeringConstraint < 0) {
