@@ -12,9 +12,16 @@
 #include "Servo/SGGlobals.h"
 #include "CarMovement/CarMotionController.h"
 #include "CarMovement/CarMovementGlobals.h"
+#include "Motor/MotorGlobals.h"
+#include "BuiltInLed/LedGlobals.h"
 
 void setup() {
     Serial.begin(115200);
+
+    pinMode(status_led_pin, OUTPUT);
+    digitalWrite(status_led_pin, HIGH);
+
+    motorControl.Begin();
 
     // se configura el servo
     steeringServo.setPeriodHertz(PERIOD_HERTZ);
@@ -49,12 +56,14 @@ void setup() {
 
 void loop() {
     if (hasNewPayload) {
+        currentMode = currentPayload.mode;
         carMotion.Apply(currentPayload);
         hasNewPayload = false;
         lastControlUpdateTime = millis();
     }
 
     carMotion.CheckSafety();
+    ledControl.UpdateSportLed();
 
     delay(5);
 }

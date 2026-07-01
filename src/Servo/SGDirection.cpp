@@ -7,9 +7,32 @@ void SGCarDirection::SetDirection(int steering)
 {
     int steeringConstraint = constrain(steering, -100, 100);
 
-    int servoAngle = SERVO_CENTER + ((steeringConstraint * SERVO_MAX_OFFSET) / 100);
+    int servoAngle = SERVO_CENTER;
 
-    if (servoAngle == lastServoAngle) return;
+    if (steeringConstraint < 0) {
+        // Palanca hacia la izquierda
+        servoAngle = map(
+            steeringConstraint,
+            -100,
+            0,
+            APP_LEFT_SERVO_ANGLE,
+            SERVO_CENTER
+        );
+    } 
+    else if (steeringConstraint > 0) {
+        // Palanca hacia la derecha
+        servoAngle = map(
+            steeringConstraint,
+            0,
+            100,
+            SERVO_CENTER,
+            APP_RIGHT_SERVO_ANGLE
+        );
+    }
+
+    if (servoAngle == lastServoAngle) {
+        return;
+    }
 
     steeringServo.write(servoAngle);
     lastServoAngle = servoAngle;
