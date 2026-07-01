@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Documentación Proyecto Carro RC BLE con ESP32-C3</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --primary: #1d4ed8;
+      --accent: #0f766e;
+      --danger: #b91c1c;
+      --warning: #92400e;
+      --border: #d1d5db;
+      --code-bg: #111827;
+      --code-text: #e5e7eb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0f172a, #1d4ed8);
+      color: white;
+      padding: 36px 28px;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 2rem;
+    }
+
+    header p {
+      margin: 0;
+      color: #dbeafe;
+      max-width: 900px;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 0 20px 48px;
+    }
+
+    section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #0f172a;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 8px;
+    }
+
+    h3 {
+      color: #1f2937;
+      margin-top: 24px;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .meta div {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 12px;
+      border-radius: 10px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: #dbeafe;
+      color: #1e40af;
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+
+    .ok {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .warn {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      overflow: hidden;
+      border-radius: 10px;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #eff6ff;
+      color: #1e3a8a;
+    }
+
+    tr:nth-child(even) td {
+      background: #f9fafb;
+    }
+
+    code {
+      font-family: Consolas, Monaco, "Courier New", monospace;
+      background: #eef2ff;
+      color: #3730a3;
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 16px;
+      border-radius: 12px;
+      overflow-x: auto;
+      font-size: 0.92rem;
+    }
+
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+
+    .note {
+      border-left: 5px solid var(--primary);
+      background: #eff6ff;
+      padding: 12px 14px;
+      border-radius: 8px;
+      margin: 12px 0;
+    }
+
+    .warning-box {
+      border-left: 5px solid var(--warning);
+      background: #fffbeb;
+      padding: 12px 14px;
+      border-radius: 8px;
+      margin: 12px 0;
+    }
+
+    .danger-box {
+      border-left: 5px solid var(--danger);
+      background: #fef2f2;
+      padding: 12px 14px;
+      border-radius: 8px;
+      margin: 12px 0;
+    }
+
+    .toc ul {
+      columns: 2;
+      padding-left: 20px;
+    }
+
+    .footer {
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+      margin-top: 32px;
+    }
+
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    figure {
+      margin: 0;
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    figure img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      display: block;
+      border: 1px solid #e5e7eb;
+    }
+
+    figcaption {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 700px) {
+      .toc ul {
+        columns: 1;
+      }
+
+      header {
+        padding: 28px 20px;
+      }
+
+      section {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Documentación Proyecto Carro RC BLE con ESP32-C3</h1>
+    <p>Conversión de un carro RC Nikko 1:16 a control remoto por Bluetooth Low Energy mediante una aplicación Android desarrollada con Ionic/Angular/Capacitor y un ESP32-C3 Super Mini.</p>
+    <div class="meta">
+      <div><strong>Estado:</strong><br>Proyecto funcional y cerrado</div>
+      <div><strong>Control:</strong><br>BLE desde app Android</div>
+      <div><strong>Microcontrolador:</strong><br>ESP32-C3 Super Mini</div>
+      <div><strong>Actuadores:</strong><br>Motor DC + servo SG90</div>
+    </div>
+  </header>
+
+  <main>
+    <section class="toc">
+      <h2>Contenido</h2>
+      <ul>
+        <li><a href="#resumen">Resumen del proyecto</a></li>
+        <li><a href="#objetivos">Objetivos alcanzados</a></li>
+        <li><a href="#componentes">Elementos usados</a></li>
+        <li><a href="#arquitectura">Arquitectura general</a></li>
+        <li><a href="#alimentacion">Sistema de alimentación</a></li>
+        <li><a href="#conexion">Conexiones principales</a></li>
+        <li><a href="#ble">Comunicación BLE</a></li>
+        <li><a href="#app">Aplicación Android</a></li>
+        <li><a href="#firmware">Firmware ESP32-C3</a></li>
+        <li><a href="#motor">Control del motor</a></li>
+        <li><a href="#direccion">Control de dirección</a></li>
+        <li><a href="#led">Indicador LED modo Sport</a></li>
+        <li><a href="#problemas">Problemas encontrados y soluciones</a></li>
+        <li><a href="#seguridad">Recomendaciones de seguridad</a></li>
+        <li><a href="#estado-final">Estado final</a></li>
+      </ul>
+    </section>
+
+    <section id="resumen">
+      <h2>1. Resumen del proyecto</h2>
+      <p>
+        El proyecto consistió en transformar un carro RC de juguete en un vehículo controlado desde celular mediante Bluetooth Low Energy.
+        El control original fue reemplazado por una arquitectura basada en ESP32-C3, un servo para la dirección, un driver BTS7960 para el motor DC
+        y una aplicación Android construida con Ionic, Angular y Capacitor.
+      </p>
+      <p>
+        El sistema permite enviar comandos de aceleración, reversa, dirección proporcional, freno/stop y modo de potencia Normal/Sport.
+      </p>
+      <div>
+        <span class="badge ok">BLE funcional</span>
+        <span class="badge ok">Dirección proporcional</span>
+        <span class="badge ok">Motor controlado por PWM</span>
+        <span class="badge ok">App Android instalada</span>
+        <span class="badge ok">Modo Sport indicado por LED</span>
+      </div>
+    </section>
+
+    <section id="objetivos">
+      <h2>2. Objetivos alcanzados</h2>
+      <ul>
+        <li>Reemplazo del sistema de control original por un ESP32-C3.</li>
+        <li>Control BLE desde una APK Android.</li>
+        <li>Lectura y parseo de comandos enviados desde la aplicación.</li>
+        <li>Control proporcional de aceleración y reversa mediante PWM.</li>
+        <li>Control proporcional de dirección usando un servo SG90.</li>
+        <li>Integración del driver BTS7960 para manejar el motor DC original.</li>
+        <li>Configuración de alimentación con batería 2S y regulador LM2596 a 5.1 V.</li>
+        <li>Indicador visual de modo Sport usando el LED azul controlable del ESP32-C3.</li>
+        <li>Corrección de conflictos LEDC entre servo y motor.</li>
+      </ul>
+    </section>
+
+    <section id="componentes">
+      <h2>3. Elementos usados</h2>
+
+      <h3>Hardware principal</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Elemento</th>
+            <th>Uso dentro del proyecto</th>
+            <th>Notas</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Carro RC Nikko 1:16 Acura NSX</td>
+            <td>Base mecánica del proyecto</td>
+            <td>Se reutilizó chasis, ruedas, transmisión y motor original.</td>
+          </tr>
+          <tr>
+            <td>ESP32-C3 Super Mini</td>
+            <td>Microcontrolador principal y servidor BLE</td>
+            <td>Programado en C++ con PlatformIO y Arduino framework.</td>
+          </tr>
+          <tr>
+            <td>Servo SG90</td>
+            <td>Dirección proporcional</td>
+            <td>Reemplazó el sistema original de dirección.</td>
+          </tr>
+          <tr>
+            <td>BTS7960 / IBT-2</td>
+            <td>Driver de potencia para motor DC</td>
+            <td>Controlado con RPWM y LPWM desde el ESP32.</td>
+          </tr>
+          <tr>
+            <td>Motor RC-260RA 2670</td>
+            <td>Motor de tracción original</td>
+            <td>Motor DC con escobillas, alimentado indirectamente mediante PWM.</td>
+          </tr>
+          <tr>
+            <td>Batería 7.4 V 3000 mAh</td>
+            <td>Fuente principal</td>
+            <td>Batería tipo 2S; cargada puede estar cerca de 8.4 V.</td>
+          </tr>
+          <tr>
+            <td>LM2596</td>
+            <td>Regulador step-down a 5.1 V</td>
+            <td>Alimenta ESP32, servo y lógica del BTS7960.</td>
+          </tr>
+          <tr>
+            <td>Switch original del carro</td>
+            <td>Encendido/apagado general</td>
+            <td>Reutilizado para cortar el positivo de alimentación.</td>
+          </tr>
+          <tr>
+            <td>Capacitor 473 del motor</td>
+            <td>Supresión de ruido EMI</td>
+            <td>Valor aproximado: 47 nF. Se mantuvo instalado en el motor.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Software y herramientas</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Herramienta</th>
+            <th>Uso</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>VS Code + PlatformIO</td>
+            <td>Desarrollo y carga del firmware al ESP32-C3.</td>
+          </tr>
+          <tr>
+            <td>Arduino framework</td>
+            <td>Base del firmware C++.</td>
+          </tr>
+          <tr>
+            <td>ESP32Servo</td>
+            <td>Control del servo SG90.</td>
+          </tr>
+          <tr>
+            <td>BLEDevice / BLEServer / BLEUtils</td>
+            <td>Servidor BLE en el ESP32-C3.</td>
+          </tr>
+          <tr>
+            <td>Ionic + Angular + Capacitor</td>
+            <td>Aplicación Android de control remoto.</td>
+          </tr>
+          <tr>
+            <td>Gradle</td>
+            <td>Compilación de APK Android.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="arquitectura">
+      <h2>4. Arquitectura general</h2>
+      <p>La solución final quedó dividida en dos bloques principales: aplicación móvil y firmware del ESP32-C3.</p>
+
+      <pre><code>Celular Android
+  └── App Ionic/Angular/Capacitor
+        └── Envía payload BLE
+              ↓
+ESP32-C3 Super Mini
+  ├── Servidor BLE
+  ├── Parser de comandos
+  ├── Control dirección SG90
+  ├── Control motor BTS7960
+  └── LED indicador modo Sport</code></pre>
+
+      <p>El ESP32-C3 recibe comandos en formato de texto simple, los parsea y aplica los valores a cada subsistema.</p>
+    </section>
+
+    <section id="alimentacion">
+      <h2>5. Sistema de alimentación</h2>
+      <p>Se utilizó una batería principal de 7.4 V para alimentar el sistema. El motor recibe potencia desde la batería a través del BTS7960, mientras que el ESP32, el servo y la lógica del driver se alimentan desde el LM2596 ajustado a 5.1 V.</p>
+
+      <pre><code>Batería 7.4 V
+   ├── Switch general
+   │     ├── B+ BTS7960
+   │     └── IN+ LM2596
+   │
+   └── GND común
+         ├── B- BTS7960
+         └── IN- LM2596
+
+LM2596 OUT+ 5.1 V
+   ├── ESP32 5V/VIN
+   ├── Servo SG90 rojo
+   └── VCC / R_EN / L_EN BTS7960
+
+LM2596 OUT-
+   ├── ESP32 GND
+   ├── Servo GND
+   └── BTS7960 GND</code></pre>
+
+      <div class="warning-box">
+        <strong>Importante:</strong> La batería 2S no debe conectarse directamente al ESP32 ni al servo. El ESP32 y el servo deben recibir 5 V regulados.
+      </div>
+
+      <p>Durante las pruebas se observó que al activar el servo el voltaje bajaba aproximadamente a 4.7 V. Se ajustó el LM2596 a 5.1 V para mejorar el margen de alimentación.</p>
+    </section>
+
+    <section id="conexion">
+      <h2>6. Conexiones principales</h2>
+
+      <h3>BTS7960</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Pin BTS7960</th>
+            <th>Conexión</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>B+</td><td>Positivo de batería después del switch</td></tr>
+          <tr><td>B-</td><td>Negativo de batería / GND común</td></tr>
+          <tr><td>M+</td><td>Motor DC cable 1</td></tr>
+          <tr><td>M-</td><td>Motor DC cable 2</td></tr>
+          <tr><td>VCC</td><td>5.1 V desde LM2596</td></tr>
+          <tr><td>GND</td><td>GND común</td></tr>
+          <tr><td>R_EN</td><td>5.1 V desde LM2596</td></tr>
+          <tr><td>L_EN</td><td>5.1 V desde LM2596</td></tr>
+          <tr><td>RPWM</td><td>GPIO5 ESP32-C3</td></tr>
+          <tr><td>LPWM</td><td>GPIO6 ESP32-C3</td></tr>
+          <tr><td>R_IS / L_IS</td><td>No usados</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Servo SG90</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Cable servo</th>
+            <th>Conexión</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Rojo</td><td>5.1 V desde LM2596</td></tr>
+          <tr><td>Café/negro</td><td>GND común</td></tr>
+          <tr><td>Naranja/amarillo</td><td>GPIO4 ESP32-C3</td></tr>
+        </tbody>
+      </table>
+
+      <h3>LED indicador</h3>
+      <p>En la ESP32-C3 Super Mini se identificó que el LED azul controlable está en <code>GPIO8</code> y funciona con lógica invertida:</p>
+      <pre><code>GPIO8 LOW  → LED encendido
+GPIO8 HIGH → LED apagado</code></pre>
+    </section>
+
+    <section id="ble">
+      <h2>7. Comunicación BLE</h2>
+      <p>El ESP32-C3 funciona como servidor BLE. La aplicación móvil se conecta como cliente y escribe comandos en una característica BLE.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Parámetro</th>
+            <th>Valor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Nombre BLE</td><td><code>BLE_Remote_Car</code></td></tr>
+          <tr><td>Service UUID</td><td><code>65215951-565f-4530-ae33-166245c668cf</code></td></tr>
+          <tr><td>Characteristic UUID</td><td><code>3986086c-190f-4de8-8164-24abdf042717</code></td></tr>
+          <tr><td>Propiedades</td><td><code>WRITE</code> y <code>WRITE_NR</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3>Formato de payload</h3>
+      <pre><code>&lt;mode&gt;,&lt;throttle&gt;,&lt;steering&gt;,&lt;brake&gt;</code></pre>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Campo</th>
+            <th>Valores</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>mode</td><td><code>N</code> / <code>S</code></td><td>Normal o Sport</td></tr>
+          <tr><td>throttle</td><td><code>-100..100</code></td><td>Reversa, neutro o avance</td></tr>
+          <tr><td>steering</td><td><code>-100..100</code></td><td>Izquierda, centro o derecha</td></tr>
+          <tr><td>brake</td><td><code>0</code> / <code>1</code></td><td>Freno/stop</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Ejemplos</h3>
+      <pre><code>N,0,0,0       → modo normal, detenido, dirección centrada
+S,80,-30,0    → modo sport, avance 80%, giro parcial
+N,-40,25,0    → modo normal, reversa 40%, giro parcial
+S,0,0,1       → modo sport, freno/stop</code></pre>
+    </section>
+
+    <section id="app">
+      <h2>8. Aplicación Android</h2>
+      <p>La aplicación fue desarrollada con Ionic, Angular y Capacitor. Permite controlar el carro desde una interfaz táctil.</p>
+
+      <h3>Funciones implementadas</h3>
+      <ul>
+        <li>Conexión y desconexión BLE.</li>
+        <li>Estado visual de conexión.</li>
+        <li>Palanca vertical para aceleración/reversa.</li>
+        <li>Palanca horizontal para dirección.</li>
+        <li>Selector de modo Normal/Sport.</li>
+        <li>Botón Stop/Freno.</li>
+        <li>Visualización de último comando y último payload.</li>
+      </ul>
+
+      <h3>Payload enviado desde la app</h3>
+      <pre><code>return `${mode},${state.throttle},${state.steering},${brake}`;</code></pre>
+
+      <div class="note">
+        Se utilizó escritura BLE sin respuesta para mejorar la respuesta en tiempo real y evitar acumulación de comandos antiguos.
+      </div>
+    </section>
+
+    <section id="firmware">
+      <h2>9. Firmware ESP32-C3</h2>
+      <p>El firmware fue organizado en módulos para separar responsabilidades.</p>
+
+      <h3>Estructura general</h3>
+      <pre><code>src/
+  main.cpp
+
+  BLE/
+    BleGlobals.h/.cpp
+    BLEConstants.h
+
+  Callbacks/
+    BleServerCallbacksHandler.h/.cpp
+    RemoteControlCallbacksHandler.h/.cpp
+
+  Servo/
+    SGConstants.h
+    SGGlobals.h/.cpp
+    SGDirection.h/.cpp
+
+  CarMovement/
+    CarMotionController.h/.cpp
+    CarMovementGlobals.h/.cpp
+
+  Motor/
+    MotorConstants.h
+    MotorControl.h/.cpp
+    MotorGlobals.h/.cpp
+
+  BuiltInLed/
+    LedConstants.h
+    LedGlobals.h/.cpp
+    LedControl.h/.cpp</code></pre>
+
+      <h3>Flujo principal</h3>
+      <pre><code>void loop() {
+    if (hasNewPayload) {
+        currentMode = currentPayload.mode;
+        carMotion.Apply(currentPayload);
+        hasNewPayload = false;
+        lastControlUpdateTime = millis();
+    }
+
+    carMotion.CheckSafety();
+    ledControl.UpdateSportLed();
+
+    delay(5);
+}</code></pre>
+    </section>
+
+    <section id="motor">
+      <h2>10. Control del motor</h2>
+      <p>El motor DC original se controla mediante el BTS7960 usando dos señales PWM: una para avance y otra para reversa.</p>
+
+      <h3>Constantes principales</h3>
+      <pre><code>constexpr int MOTOR_RPWM_PIN = 5;
+constexpr int MOTOR_LPWM_PIN = 6;
+
+constexpr int MOTOR_PWM_FREQ = 1000;
+constexpr int MOTOR_PWM_RESOLUTION = 8;
+
+constexpr int MOTOR_RPWM_CHANNEL = 4;
+constexpr int MOTOR_LPWM_CHANNEL = 5;
+
+constexpr int MOTOR_MAX_PWM = 100;
+constexpr int MOTOR_SPORT_MAX_PWM = 110;
+constexpr int MOTOR_BRAKE_PWM = 45;</code></pre>
+
+      <h3>Notas de implementación</h3>
+      <ul>
+        <li>Se usaron canales LEDC <code>4</code> y <code>5</code> para evitar conflicto con la librería del servo.</li>
+        <li>El modo Sport aumenta el PWM máximo permitido.</li>
+        <li>El modo Normal mantiene un límite de PWM más conservador.</li>
+        <li>El motor original no debe recibir toda la potencia de la batería 2S sin limitación.</li>
+      </ul>
+
+      <h3>Lógica conceptual</h3>
+      <pre><code>throttle &gt; 0  → Forward(pwm)
+throttle &lt; 0  → Backward(pwm)
+throttle = 0  → Stop()
+brake = 1     → Brake() o Stop()</code></pre>
+
+      <div class="warning-box">
+        <strong>Nota:</strong> Si se usa <code>MOTOR_MIN_PWM</code>, debe aplicarse únicamente cuando <code>throttle != 0</code>. Para máxima estabilidad se puede mapear desde 0 hasta el máximo de modo.
+      </div>
+    </section>
+
+    <section id="direccion">
+      <h2>11. Control de dirección</h2>
+      <p>La dirección se implementó con un servo SG90. El valor de dirección de la app se transforma a un ángulo físico del servo.</p>
+
+      <h3>Constantes finales conservadoras</h3>
+      <pre><code>constexpr int SERVO_CENTER = 90;
+
+constexpr int APP_LEFT_SERVO_ANGLE = 110;
+constexpr int APP_RIGHT_SERVO_ANGLE = 70;</code></pre>
+
+      <p>Estos valores se eligieron para reducir esfuerzo mecánico y evitar que el servo quedara haciendo fuerza contra los topes de dirección.</p>
+
+      <h3>Método de dirección</h3>
+      <pre><code>void SGCarDirection::SetDirection(int steering)
+{
+    int steeringConstraint = constrain(steering, -100, 100);
+
+    if (abs(steeringConstraint) &lt;= 3) {
+        steeringConstraint = 0;
+    }
+
+    int servoAngle = SERVO_CENTER;
+
+    if (steeringConstraint &lt; 0) {
+        servoAngle = map(
+            steeringConstraint,
+            -100,
+            0,
+            APP_LEFT_SERVO_ANGLE,
+            SERVO_CENTER
+        );
+    } 
+    else if (steeringConstraint &gt; 0) {
+        servoAngle = map(
+            steeringConstraint,
+            0,
+            100,
+            SERVO_CENTER,
+            APP_RIGHT_SERVO_ANGLE
+        );
+    }
+
+    steeringServo.write(servoAngle);
+    lastServoAngle = servoAngle;
+}</code></pre>
+
+      <div class="note">
+        Se confirmó que cuando el sistema recibe <code>steering = 0</code>, el ESP32 ordena <code>servoAngle = 90</code>. Si físicamente las ruedas quedan desviadas, la causa probable es mecánica: tensión del varillaje, fricción, tope físico o falta de torque del SG90.
+      </div>
+    </section>
+
+    <section id="led">
+      <h2>12. Indicador LED modo Sport</h2>
+      <p>El modo Sport se indica con parpadeo del LED azul controlable de la ESP32-C3 Super Mini.</p>
+
+      <h3>Hallazgo importante</h3>
+      <p>El pin correcto no fue <code>LED_BUILTIN</code>, sino <code>GPIO8</code>. Además, el LED es activo en bajo.</p>
+
+      <pre><code>int status_led_pin = 8;</code></pre>
+
+      <h3>Control del LED</h3>
+      <pre><code>void LedControl::SetStatusLed(bool on) {
+    digitalWrite(status_led_pin, on ? LOW : HIGH);
+}
+
+void LedControl::UpdateSportLed() {
+    if (currentMode != 'S')
+    {
+        sportLedState = false;
+        SetStatusLed(false);
+        return;
+    }
+
+    unsigned long now = millis();
+
+    if (now - lastSportLedBlinkTime &gt;= SPORT_LED_BLINK_MS) {
+        lastSportLedBlinkTime = now;
+        sportLedState = !sportLedState;
+        SetStatusLed(sportLedState);
+    }
+}</code></pre>
+
+      <h3>Comportamiento esperado</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Modo</th>
+            <th>LED</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Normal</td><td>Apagado</td></tr>
+          <tr><td>Sport</td><td>Parpadeando</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="problemas">
+      <h2>13. Problemas encontrados y soluciones</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Problema</th>
+            <th>Causa identificada</th>
+            <th>Solución aplicada</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ESP32 conectaba/desconectaba por USB</td>
+            <td>Problemas físicos de conector/cable/soldadura</td>
+            <td>Nuevo ESP32-C3 soldado con más cuidado y ajuste del conector.</td>
+          </tr>
+          <tr>
+            <td>El motor no giraba</td>
+            <td>R_EN y L_EN del BTS7960 sin 5 V</td>
+            <td>Conectar R_EN y L_EN a 5.1 V desde LM2596.</td>
+          </tr>
+          <tr>
+            <td>Servo y motor se activaban al tiempo</td>
+            <td>Conflicto de canales LEDC con ESP32Servo</td>
+            <td>Usar canales 4 y 5 para el motor.</td>
+          </tr>
+          <tr>
+            <td>Comandos BLE llegaban con retraso</td>
+            <td>Acumulación de escrituras BLE</td>
+            <td>Uso de escritura sin respuesta y throttling de envíos.</td>
+          </tr>
+          <tr>
+            <td>Dirección invertida</td>
+            <td>Orientación física del servo</td>
+            <td>Invertir lógica o mapear ángulos desde el punto de vista de la app.</td>
+          </tr>
+          <tr>
+            <td>Dirección no simétrica</td>
+            <td>Geometría mecánica del varillaje</td>
+            <td>Usar ángulos independientes para izquierda y derecha.</td>
+          </tr>
+          <tr>
+            <td>Servo quedaba haciendo fuerza</td>
+            <td>Recorrido excesivo o tope mecánico</td>
+            <td>Reducir ángulos a valores conservadores.</td>
+          </tr>
+          <tr>
+            <td>LED Sport no parpadeaba</td>
+            <td>Pin incorrecto y lógica invertida</td>
+            <td>Usar GPIO8 y controlar LED como activo en bajo.</td>
+          </tr>
+          <tr>
+            <td>Caída de voltaje al mover servo</td>
+            <td>Picos de consumo del SG90 con carga mecánica</td>
+            <td>Ajustar LM2596 a 5.1 V y revisar alimentación directa desde regulador.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="seguridad">
+      <h2>14. Recomendaciones de seguridad y mantenimiento</h2>
+      <ul>
+        <li>No conectar la batería 2S directamente al ESP32 ni al servo.</li>
+        <li>Verificar polaridad antes de energizar el sistema.</li>
+        <li>Mantener tierra común entre batería, BTS7960, LM2596, ESP32 y servo.</li>
+        <li>Evitar PWM excesivo en el motor original RC-260RA con batería 2S.</li>
+        <li>Revisar temperatura del motor, BTS7960, LM2596 y cables después de cada prueba.</li>
+        <li>Si el servo zumba o queda forzado, reducir recorrido o corregir mecánica.</li>
+        <li>No forzar la dirección contra topes físicos.</li>
+        <li>Usar cables adecuados para la corriente del motor y del servo.</li>
+        <li>Validar siempre el voltaje de salida del LM2596 antes de conectar el ESP32.</li>
+        <li>No cargar la batería sin cargador adecuado para su tipo y número de celdas.</li>
+      </ul>
+
+      <div class="danger-box">
+        <strong>Advertencia:</strong> Una batería 2S cargada puede entregar alrededor de 8.4 V. Ese voltaje puede dañar el ESP32 o el servo si se conecta sin regulación.
+      </div>
+    </section>
+
+    <section id="estado-final">
+      <h2>15. Estado final del proyecto</h2>
+      <p>El proyecto queda cerrado con el siguiente estado:</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Subsistema</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>BLE ESP32-C3</td><td>Funcional</td></tr>
+          <tr><td>App Android</td><td>Funcional</td></tr>
+          <tr><td>Control de motor</td><td>Funcional con límites de PWM</td></tr>
+          <tr><td>Dirección servo</td><td>Funcional con valores conservadores</td></tr>
+          <tr><td>Modo Sport</td><td>Implementado con PWM máximo mayor</td></tr>
+          <tr><td>LED Sport</td><td>Funcional usando GPIO8 activo en bajo</td></tr>
+          <tr><td>Alimentación</td><td>Batería 2S + LM2596 a 5.1 V</td></tr>
+          <tr><td>Switch</td><td>Reutilizado como encendido general</td></tr>
+        </tbody>
+      </table>
+
+      <p>
+        Como mejora futura, podría considerarse reemplazar el SG90 por un servo con mayor torque, agregar un capacitor cerca del servo,
+        implementar telemetría de batería y mejorar el sistema de freno con lógica más controlada.
+      </p>
+    </section>
+
+    <p class="footer">
+      Documentación generada para el proyecto de carro RC BLE con ESP32-C3.
+    </p>
+  </main>
+</body>
+</html>
