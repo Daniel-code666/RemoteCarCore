@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <BLEServer.h>
+#include <string>
 
 class RemoteControlCallbackHandler: public BLECharacteristicCallbacks {
     public:
